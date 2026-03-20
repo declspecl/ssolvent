@@ -141,7 +141,7 @@ impl FromStr for Board {
         for character in s.chars() {
             let digit_val = match character {
                 '1'..='9' => character as u8 - b'0',
-                '?' | '0' | ' ' => {
+                '.' | '?' | '0' | ' ' => {
                     position_id += 1;
                     continue;
                 }

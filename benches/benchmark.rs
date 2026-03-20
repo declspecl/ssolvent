@@ -37,11 +37,17 @@ fn run_benchmark(c: &mut Criterion) {
     let medium = load_puzzles(&resources_dir.join("medium.txt"));
     let hard = load_puzzles(&resources_dir.join("hard.txt"));
     let diabolical = load_puzzles(&resources_dir.join("diabolical.txt"));
+    let clue_17 = load_puzzles(&resources_dir.join("17_clue.txt"));
+    let norvig_top95 = load_puzzles(&resources_dir.join("norvig_top95.txt"));
+    let norvig_hardest = load_puzzles(&resources_dir.join("norvig_hardest.txt"));
 
     bench_category(c, "easy", &easy);
     bench_category(c, "medium", &medium);
     bench_category(c, "hard", &hard);
     bench_category(c, "diabolical", &diabolical);
+    bench_category(c, "17_clue", &clue_17);
+    bench_category(c, "norvig_top95", &norvig_top95);
+    bench_category(c, "norvig_hardest", &norvig_hardest);
 }
 
 criterion_group!(benches, run_benchmark);
