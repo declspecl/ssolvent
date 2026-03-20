@@ -1,4 +1,4 @@
-use std::fmt::Write;
+use std::{fmt::Write, str::FromStr};
 
 use crate::board::{digit::Digit, digit_candidate_set::DigitCandidateSet, position::Position};
 
@@ -119,7 +119,7 @@ impl Board {
                 if let Some(digit) = cell.solved_digit() {
                     write!(out, "{}", digit.as_u8()).unwrap();
                 } else {
-                    write!(out, "?").unwrap();
+                    write!(out, " ").unwrap();
                 }
             }
 
@@ -130,3 +130,31 @@ impl Board {
     }
 }
 
+// designed to support parsing from strings in https://github.com/grantm/sudoku-exchange-puzzle-bank
+impl FromStr for Board {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut board = Board::new();
+
+        let mut position_id = 0;
+        for character in s.chars() {
+            let digit_val = match character {
+                '1'..='9' => character as u8 - b'0',
+                '?' | '0' | ' ' => {
+                    position_id += 1;
+                    continue;
+                }
+                '\n' | '\r' | '\t' | '/' => continue,
+                _ => return Err(format!("Encountered unexpected character: {}", character)),
+            };
+
+            let position = Position::from_id(position_id);
+            let digit = Digit::ALL[(digit_val - 1) as usize];
+            board.solve_cell(position, digit);
+            position_id += 1;
+        }
+
+        return Ok(board);
+    }
+}
