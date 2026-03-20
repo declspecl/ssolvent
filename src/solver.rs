@@ -1,4 +1,4 @@
-use crate::board::{board::Board, position::{MAX_POSITION_ID, Position}};
+use crate::board::{board::{BOARD_LENGTH, Board}, position::{MAX_POSITION_ID, Position}};
 
 /// uses backtracing with MRV heuristic to solve the puzzle
 /// ref: https://www.geeksforgeeks.org/artificial-intelligence/explain-the-concept-of-backtracking-search-and-its-role-in-finding-solutions-to-csps/
@@ -7,7 +7,7 @@ pub fn solve(board: &Board) -> Option<Board> {
         return Some(board.to_owned());
     }
 
-    let (mut fewest_candidates_position_id, mut fewest_candidates_count) = (0, u32::MAX);
+    let (mut fewest_candidates_position_id, mut fewest_candidates_count) = (0, 10u32);
 
     for position_id in 0..=MAX_POSITION_ID {
         let count = board.at(Position::from_id(position_id)).candidates_count();
@@ -17,8 +17,8 @@ pub fn solve(board: &Board) -> Option<Board> {
         }
     }
 
-    if fewest_candidates_count == u32::MAX {
-        panic!("The board isn't solved and isn't contradictory. There should exist at least one unsolved cell (candidates_count > 1).");
+    if fewest_candidates_count == (BOARD_LENGTH as u32 + 1) {
+        return None;
     }
 
     let fewest_candidates_position = Position::from_id(fewest_candidates_position_id);

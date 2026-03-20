@@ -1,20 +1,21 @@
 use std::{fmt::Write, str::FromStr};
 
-use crate::board::{digit::Digit, digit_candidate_set::DigitCandidateSet, position::Position};
+use crate::board::{digit_candidate_set::DigitCandidateSet, position::Position};
 
 pub const BOARD_LENGTH: u8 = 9;
 pub const BOARD_CELL_COUNT: u8 = BOARD_LENGTH * BOARD_LENGTH;
 
 #[derive(Debug, Clone)]
 pub struct Board {
-    cells: [DigitCandidateSet; BOARD_CELL_COUNT as usize]
+    cells: [DigitCandidateSet; BOARD_CELL_COUNT as usize],
+    solved_count: u8,
 }
 
 impl Board {
     const FULL_CELLS: [DigitCandidateSet; BOARD_CELL_COUNT as usize] = [DigitCandidateSet::ALL; BOARD_CELL_COUNT as usize];
 
     pub fn new() -> Self {
-        return Self { cells: Self::FULL_CELLS };
+        return Self { cells: Self::FULL_CELLS, solved_count: 0 };
     }
 
     pub fn at(&self, position: Position) -> DigitCandidateSet {
@@ -22,11 +23,16 @@ impl Board {
     }
 
     /// returns false if the resulting board is invalid
-    pub fn solve_cell(&mut self, position: Position, digit: Digit) -> bool {
+    pub fn solve_cell(&mut self, position: Position, digit: u8) -> bool {
         self.cells[position.id() as usize] = DigitCandidateSet::of(digit);
+        self.solved_count += 1;
 
         for peer_id in position.peer_ids() {
             let peer_cell = self.cells[peer_id as usize];
+            if !peer_cell.contains(digit) {
+                continue;
+            }
+
             let pruned_peer_cell = peer_cell.remove(digit);
             self.cells[peer_id as usize] = pruned_peer_cell;
 
@@ -49,8 +55,7 @@ impl Board {
     }
 
     pub fn is_solved(&self) -> bool {
-        return self.cells.iter()
-            .all(|cell| cell.is_solved());
+        return self.solved_count == 81;
     }
 
     pub fn display_candidates(&self) -> String {
@@ -82,11 +87,11 @@ impl Board {
                     let cell = self.cells[((board_row * BOARD_LENGTH) + board_col) as usize];
 
                     for candidate_col in 0..3u8 {
-                        let digit = Digit::ALL[((candidate_row * 3) + candidate_col) as usize];
+                        let digit = ((candidate_row * 3) + candidate_col + 1) as u8;
                         let is_digit_candidate = cell.contains(digit);
 
                         if is_digit_candidate {
-                            write!(out, "{}", digit.as_u8()).unwrap();
+                            write!(out, "{}", digit).unwrap();
                         } else {
                             write!(out, " ").unwrap();
                         }
@@ -117,7 +122,7 @@ impl Board {
 
                 let cell = self.cells[((board_row * BOARD_LENGTH) + board_col) as usize];
                 if let Some(digit) = cell.solved_digit() {
-                    write!(out, "{}", digit.as_u8()).unwrap();
+                    write!(out, "{}", digit).unwrap();
                 } else {
                     write!(out, " ").unwrap();
                 }
@@ -150,8 +155,7 @@ impl FromStr for Board {
             };
 
             let position = Position::from_id(position_id);
-            let digit = Digit::ALL[(digit_val - 1) as usize];
-            board.solve_cell(position, digit);
+            board.solve_cell(position, digit_val);
             position_id += 1;
         }
 
