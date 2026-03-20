@@ -34,5 +34,24 @@ impl DigitCandidateSet {
     pub const fn is_solved(self) -> bool {
         return self.candidates_count() == 1;
     }
+
+    pub fn solved_digit(self) -> Option<Digit> {
+        if self.is_solved() {
+            return Some(Digit::from(match self.0.trailing_zeros() {
+                1 => Digit::ONE,
+                2 => Digit::TWO,
+                3 => Digit::THREE,
+                4 => Digit::FOUR,
+                5 => Digit::FIVE,
+                6 => Digit::SIX,
+                7 => Digit::SEVEN,
+                8 => Digit::EIGHT,
+                9 => Digit::NINE,
+                _ => unreachable!(),
+            }));
+        }
+
+        return None;
+    }
 }
 

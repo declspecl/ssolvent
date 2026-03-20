@@ -1,22 +1,20 @@
-use crate::board::{board::Board, digit::Digit, digit_candidate_set::DigitCandidateSet, position::Position};
+use crate::board::{board::Board, digit::Digit, position::Position};
 
 pub mod board;
 
 fn main() {
-    let board = Board::new();
-    println!("Board: {:?}", board);
+    let mut board = Board::new();
+    board.solve_cell(Position::new(Digit::ONE, Digit::ONE), Digit::ONE);
+    board.solve_cell(Position::new(Digit::ONE, Digit::TWO), Digit::TWO);
+    board.solve_cell(Position::new(Digit::ONE, Digit::THREE), Digit::THREE);
+    board.solve_cell(Position::new(Digit::ONE, Digit::FOUR), Digit::FOUR);
+    board.solve_cell(Position::new(Digit::ONE, Digit::FIVE), Digit::FIVE);
+    board.solve_cell(Position::new(Digit::ONE, Digit::SIX), Digit::SIX);
+    board.solve_cell(Position::new(Digit::ONE, Digit::SEVEN), Digit::SEVEN);
+    board.solve_cell(Position::new(Digit::ONE, Digit::EIGHT), Digit::EIGHT);
+    board.solve_cell(Position::new(Digit::ONE, Digit::NINE), Digit::NINE);
 
-    let mut top_left = board.at(Position::new(Digit::ONE, Digit::ONE));
-    top_left = top_left.remove(Digit::ONE);
-    top_left = top_left.remove(Digit::TWO);
-    top_left = top_left.remove(Digit::THREE);
-    top_left = top_left.remove(Digit::FOUR);
-    top_left = top_left.remove(Digit::FIVE);
-    top_left = top_left.remove(Digit::SIX);
-    top_left = top_left.remove(Digit::SEVEN);
-    top_left = top_left.remove(Digit::EIGHT);
-    top_left = top_left.remove(Digit::NINE);
+    println!("Board candidates:\n{}", board.display_candidates());
 
-    println!("Testing {:?} = {:?}", top_left, DigitCandidateSet::NONE);
-    assert_eq!(top_left, DigitCandidateSet::NONE);
+    println!("Board solution:\n{}", board.display_solution());
 }
