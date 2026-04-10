@@ -7,17 +7,29 @@ pub mod board;
 pub mod solver;
 
 fn main() {
-    let puzzle_string = "050703060007000800000816000000030000005000100730040086906000204840572093000409000";
-    let board = Board::from_str(puzzle_string).unwrap();
+    let puzzles = vec![
+        "080200400570000100002300000820090005000715000700020041000006700003000018007009050",
+        "210950004090060037000700000000000308920000015805000000000002000680010040100047096",
+        "600040001030008700009700000003096000906000103000120500000002400002400080400010002",
+        "090000006006890000203706090100020000054908320000070004020607809000035600300000050",
+        "004009300010030050800700009006800020005000700020007900200004007040050060001200500",
+        "000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ];
 
-    println!("Original board:\n{}", board.display_solution());
+    for puzzle in puzzles.into_iter() {
+        let board = Board::from_str(puzzle).unwrap();
 
-    match solve(&board) {
-        Some(solution) => {
-            println!("Solved board:\n{}", solution.display_solution());
+        println!("Original board:\n{}\n", board.display_solution());
+
+        match solve(&board) {
+            Some(solution) => {
+                println!("Solved board:\n{}", solution.display_solution());
+            }
+            None => {
+                println!("No solution found.");
+            }
         }
-        None => {
-            println!("No solution found.");
-        }
+
+        println!("\n");
     }
 }
