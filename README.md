@@ -4,6 +4,8 @@ ssolvent (sudoku solve~~r~~nt) is a MRV Sudoku solver written in Rust.
 
 Implemented for W26 CSI 3610 with Professor Tianle Ma by Gavin D'Hondt (gavindhondt@oakland.edu).
 
+YouTube video explanation: https://youtu.be/mi_EJzySoFU
+
 
 ## Problem & Approach
 
