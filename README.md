@@ -1,6 +1,6 @@
 ## ssolvent
 
-ssolvent (sudoku solve~~r~~nt) is a MRV Sudoku solver written in Rust.
+ssolvent (s~~udoku~~ solve~~r~~nt) is a MRV Sudoku solver written in Rust.
 
 Implemented for W26 CSI 3610 with Professor Tianle Ma by Gavin D'Hondt (gavindhondt@oakland.edu).
 
